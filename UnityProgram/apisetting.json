@@ -1,0 +1,38 @@
+[
+	{
+		"Id": "1",
+		"Name": "hunters001",
+		"Site": "etoland",
+		"IsExist": "http://103.199.103.248:2005/bbs/BBSIsExist",
+		"PostBBS": "http://103.199.103.248:2005/bbs/PostBBS",
+		"PostImg": "http://103.199.103.248:2005/bbs/PostImage",
+		"NodeId": "16"
+	},
+	{
+		"Id": "2",
+		"Name": "hunters002",
+		"Site": "etoland",
+		"IsExist": "http://103.199.103.248:3005/bbs/BBSIsExist",
+		"PostBBS": "http://103.199.103.248:3005/bbs/PostBBS",
+		"PostImg": "http://103.199.103.248:3005/bbs/PostImage",
+		"NodeId": "16"
+	},
+	{
+		"Id": "3",
+		"Name": "hunters003",
+		"Site": "etoland",
+		"IsExist": "http://103.199.103.248:4005/bbs/BBSIsExist",
+		"PostBBS": "http://103.199.103.248:4005/bbs/PostBBS",
+		"PostImg": "http://103.199.103.248:4005/bbs/PostImage",
+		"NodeId": "16"
+	},
+	{
+		"Id": "4",
+		"Name": "linkeye6",
+		"Site": "livecore",
+		"IsExist": "http://103.199.103.248:3005/bbs/BBSIsExist",
+		"PostBBS": "http://103.199.103.248:3005/bbs/PostBBS",
+		"PostImg": "http://103.199.103.248:3005/bbs/PostImage",
+		"NodeId": "17"
+	}
+]

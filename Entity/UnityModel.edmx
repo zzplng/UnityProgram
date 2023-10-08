@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="UnityModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Ad">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Href" Type="nvarchar(max)" />
+          <Property Name="ImgPath" Type="nvarchar(max)" />
+          <Property Name="Content" Type="nvarchar(max)" />
+          <Property Name="Sort" Type="int" />
+          <Property Name="Type" Type="int" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="100" />
+          <Property Name="CategoryId" Type="int" />
+          <Property Name="Display" Type="nvarchar" MaxLength="100" />
+          <Property Name="ModifyDate" Type="datetime" />
+          <Property Name="ViewCount" Type="int" Nullable="false" />
+          <Property Name="IsAlive" Type="bit" Nullable="false" />
+          <Property Name="CheckRule" Type="int" Nullable="false" />
+          <Property Name="CheckDate" Type="datetime" />
+        </EntityType>
+        <EntityContainer Name="UnityModelStoreContainer">
+          <EntitySet Name="Ad" EntityType="Self.Ad" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UnityModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Ad">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Href" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ImgPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Sort" Type="Int32" />
+          <Property Name="Type" Type="Int32" />
+          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryId" Type="Int32" />
+          <Property Name="Display" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ModifyDate" Type="DateTime" Precision="3" />
+          <Property Name="ViewCount" Type="Int32" Nullable="false" />
+          <Property Name="IsAlive" Type="Boolean" Nullable="false" />
+          <Property Name="CheckRule" Type="Int32" Nullable="false" />
+          <Property Name="CheckDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="UnityEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Ad" EntityType="Self.Ad" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UnityModelStoreContainer" CdmEntityContainer="UnityEntities">
+          <EntitySetMapping Name="Ad">
+            <EntityTypeMapping TypeName="UnityModel.Ad">
+              <MappingFragment StoreEntitySet="Ad">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Href" ColumnName="Href" />
+                <ScalarProperty Name="ImgPath" ColumnName="ImgPath" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Sort" ColumnName="Sort" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Display" ColumnName="Display" />
+                <ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+                <ScalarProperty Name="ViewCount" ColumnName="ViewCount" />
+                <ScalarProperty Name="IsAlive" ColumnName="IsAlive" />
+                <ScalarProperty Name="CheckRule" ColumnName="CheckRule" />
+                <ScalarProperty Name="CheckDate" ColumnName="CheckDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
