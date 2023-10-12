@@ -106,6 +106,7 @@ namespace Checklink
                     WriteLog("暂停30min", false);
                     Thread.Sleep(1800000);//间隔一小时
                     WriteLog("", true);
+                    WriteLog("开始", false);
                     foreach (var item in list)
                     {
                         Thread.Sleep(3000);
@@ -117,6 +118,8 @@ namespace Checklink
                         var checkrule = item.CheckRule;
                         WriteLog(name + "\t" + href + "\t开始", false);
                         Thread.Sleep(2000);
+
+
                         try
                         {
                             if (string.IsNullOrEmpty(href))
