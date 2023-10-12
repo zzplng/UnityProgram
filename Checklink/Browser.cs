@@ -25,6 +25,7 @@ namespace Checklink
         ChromiumWebBrowser Browser1;
         System.Threading.Timer timer;
         string api, getapi;
+        string currenturl;
         private delegate void MyDelegate();
         public delegate void MyInvoke(string txt, bool is_update);
 
@@ -77,6 +78,8 @@ namespace Checklink
 
             while (!isStop)
             {
+                Browser1.ExecuteScriptAsync("window.open (\"http://www.zhihu.com\", \"newwindow2\", \"height=100, width=100, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no\")");
+
                 WriteLog("暂停1min", false);
                 Thread.Sleep(60000);//间隔30min
                 WriteLog("", true);
@@ -162,12 +165,17 @@ namespace Checklink
         private void Browser_Load(object sender, EventArgs e)
         {
             Browser1.FrameLoadEnd += new EventHandler<FrameLoadEndEventArgs>(chromeBrowser_IsFrameLoadEnd);
+            //Browser1.AddressChanged += Browser_AddressChanged;
             //Browser1.DownloadHandler = new DownloadHandler(this);
             Browser1.LifeSpanHandler = new LifeSpanHandler();
             Browser1.JsDialogHandler = new JsDialogHandler();
 
         }
-
+        private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
+        {
+            this.currenturl = e.Address;
+            WriteLog(currenturl, false);
+        }
 
 
         void chromeBrowser_IsFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
@@ -519,7 +527,7 @@ namespace Checklink
     {
         public bool DoClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
-            return true;
+            return false;
         }
 
         public void OnAfterCreated(IWebBrowser chromiumWebBrowser, IBrowser browser)
@@ -535,7 +543,7 @@ namespace Checklink
         public bool OnBeforePopup(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, string targetUrl, string targetFrameName, WindowOpenDisposition targetDisposition, bool userGesture, IPopupFeatures popupFeatures, IWindowInfo windowInfo, IBrowserSettings browserSettings, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
         {
             newBrowser = null;
-            return false;
+            return true;
         }
     }
 
