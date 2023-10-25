@@ -1,0 +1,14 @@
+[
+	{
+		"SiteId": "1",
+		"Site": "linkeye6",
+		"API": "http://103.199.103.248:2005/ad/Checklink",
+		"GetAPI": "http://103.199.103.248:2005/bbs/Getlist"
+	},
+	{
+		"SiteId": "2",
+		"Site": "koreawebsite",
+		"API": "http://103.199.103.248:2005/ad/Checklink",
+		"GetAPI": "http://103.199.103.248:2005/bbs/Getlist"
+	}
+]

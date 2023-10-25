@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -97,6 +98,27 @@ namespace UnityProgram
                 return false;
             }
 
+        }
+
+        private void btnencode_Click(object sender, EventArgs e)
+        {
+            var encode = txtencode.Text;
+
+            if (string.IsNullOrWhiteSpace(encode)) return;
+            var idn = new IdnMapping();
+            var url = idn.GetAscii(encode);
+            txtdecode.Text = url;
+        }
+
+        private void btndecode_Click(object sender, EventArgs e)
+        {
+
+            var decode = txtdecode.Text;
+
+            if (string.IsNullOrWhiteSpace(decode)) return;
+            var idn = new IdnMapping();
+            var url = idn.GetUnicode(decode);
+            txtencode.Text = url;
         }
     }
 }

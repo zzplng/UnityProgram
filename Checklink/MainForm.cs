@@ -945,6 +945,14 @@ namespace Checklink
             var url = idn.GetAscii(str);
             return url;
         }
+        public static string Unicode(string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return str;
+            var idn = new IdnMapping();
+            var url = idn.GetUnicode(str);
+            return url;
+        }
 
 
         public bool ChecklinkAPI(int id, bool isalive, string href)
