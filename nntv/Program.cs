@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UnityProgram
+namespace nntv
 {
     internal static class Program
     {
@@ -15,7 +16,7 @@ namespace UnityProgram
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new nntv());
         }
     }
 }

@@ -17,7 +17,13 @@ namespace Spider
         public Form1()
         {
             InitializeComponent();
-            Run1();
+            Run();
+
+            //string u = "https://livescore.co.kr/bbs/board.php?bo_table=share&wr_id=2068569&page=1";
+            //int startIndex = u.IndexOf("&wr_id=") + 7;
+            //int sublength = u.IndexOf("&page=") - startIndex;
+            //string wr_id = u.Substring(startIndex, sublength);
+            //MessageBox.Show(wr_id);
         }
 
 
@@ -37,8 +43,8 @@ namespace Spider
             {
                 try
                 {
-                    string src = string.Format("https://www.sonsofheaven.com/img/level/soldier/{0}.gif", i);
-                    string filename = i + ".gif";
+                    string src = string.Format("https://www.cool112.com/images/lv/LV_{0}.gif", i);
+                    string filename = "LV_" + i + ".gif";
                     string filepath = Path.Combine(path, filename);
 
                     WebRequest request = WebRequest.Create(src);//图片src内容
@@ -76,6 +82,7 @@ namespace Spider
             Stream reader = response.GetResponseStream();
             var re = new StreamReader(reader);
             string str = re.ReadToEnd();
+            MessageBox.Show(str);
         }
     }
 }

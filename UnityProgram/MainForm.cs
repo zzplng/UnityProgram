@@ -20,7 +20,7 @@ namespace UnityProgram
 	{
 
 		string postbbsapi, postimgapi, bbsisexistapi;
-		List<JsonInfo> listjson = new List<JsonInfo>();
+		private List<JsonInfo> listjson = new List<JsonInfo>();
 
 		public bool isStop = false;
 		public delegate void MyInvoke(string txt, bool is_update);
@@ -29,7 +29,7 @@ namespace UnityProgram
 		{
 			InitializeComponent();
 
-			AddPage(new livecore(), 1002);
+			AddPage(new livescore(), 1002);
 
 		}
 
@@ -89,13 +89,13 @@ namespace UnityProgram
 				while (!isStop)
 				{
 					WriteLog("暂停5min", false);
-					Thread.Sleep(300000);//间隔一小时
+					Thread.Sleep(300000);
 					WriteLog("", true);
 					int page = 1;
 					while (page <= 3)
 					{
-						WriteLog("暂停20s", false);
-						Thread.Sleep(20000);
+						WriteLog("暂停60s", false);
+						Thread.Sleep(60000);
 						if (isStop) break;
 						var url = "https://www.etoland.co.kr/pages/hit.php?&page=" + page.ToString();
 						page++;
@@ -289,7 +289,7 @@ namespace UnityProgram
 				subjectstr = Regex.Replace(tdstr, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
 				subjectstr = Regex.Replace(subjectstr, @"\[.*?\]", "", RegexOptions.IgnoreCase);
 				//textBox1.Text = subjectstr.Trim();
-				subjectstr = subjectstr.Replace("&quot;", "").Replace("&nbsp;", "").Replace("&#039;", "").Replace("&#65279;", "").Replace("&lt;", "").Replace("&gt;", "").Replace(" ", "").Replace("'", "").Trim();
+				subjectstr = subjectstr.Replace("&quot;", "").Replace("&nbsp;", "").Replace("&#039;", "").Replace("&#034;", "").Replace("&#65279;", "").Replace("&lt;", "").Replace("&gt;", "").Replace("'", "").Trim();
 				subjectstr = subjectstr.Replace("\n", "").Replace("\t", "").Replace("\r", "");
 				//Write(subjectstr.TrimStart().TrimEnd(), false);
 				/* 获取标题 END*/
@@ -453,8 +453,12 @@ namespace UnityProgram
 				}
 
 				List<string> filelist = filelist1.Concat(filelist2).ToList();
+				int fileindex = 0;
 				foreach (var file in filelist)
 				{
+					fileindex++;
+					WriteLog("文件传输中..." + fileindex);
+					Thread.Sleep(5000);
 					var errlist2 = PostImg(file);
 					foreach (var err in errlist2)
 					{
@@ -471,7 +475,7 @@ namespace UnityProgram
 		}
 
 
-		public void WriteLog(string Message, bool is_update)
+		public void WriteLog(string Message, bool is_update = false)
 		{
 			MyInvoke mi = new MyInvoke(WriteTxt);
 			this.BeginInvoke(mi, new Object[] { Message, is_update });
@@ -849,6 +853,19 @@ namespace UnityProgram
 		public List<string> PostImg(string filePath)
 		{
 			List<string> errlist = new List<string>();
+
+			int pos = filePath.LastIndexOf("\\");
+			string fileName = filePath.Substring(pos + 1);
+
+			//请求头部信息 
+			StringBuilder sbHeader = new StringBuilder(string.Format("Content-Disposition:form-data;name=\"file\";filename=\"{0}\"\r\nContent-Type:application/octet-stream\r\n\r\n", fileName));
+			byte[] postHeaderBytes = Encoding.UTF8.GetBytes(sbHeader.ToString());
+
+			FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+			byte[] bArr = new byte[fs.Length];
+			fs.Read(bArr, 0, bArr.Length);
+			fs.Close();
+
 			foreach (var info in listjson)
 			{
 				try
@@ -866,33 +883,8 @@ namespace UnityProgram
 					request.ProtocolVersion = HttpVersion.Version10;
 					request.Timeout = 30000;
 
-					//using (Stream reqStream = request.GetRequestStream())
-					//{
-					//    //reqStream.Write(data, 0, data.Length);
-					//    //reqStream.Close();
-					//}
-
-					//var filePath = "D:\\Code\\UnityProgram\\PostBBS\\bin\\Debug\\3718152700_FkJQqiAz_1.mp4";
-					//读取file文件
-					//FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-					//BinaryReader binaryReader = new BinaryReader(fileStream);
-
-
 					byte[] itemBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "\r\n");
 					byte[] endBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "--\r\n");
-
-					int pos = filePath.LastIndexOf("\\");
-					string fileName = filePath.Substring(pos + 1);
-
-					//请求头部信息 
-					StringBuilder sbHeader = new StringBuilder(string.Format("Content-Disposition:form-data;name=\"file\";filename=\"{0}\"\r\nContent-Type:application/octet-stream\r\n\r\n", fileName));
-
-					byte[] postHeaderBytes = Encoding.UTF8.GetBytes(sbHeader.ToString());
-
-					FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-					byte[] bArr = new byte[fs.Length];
-					fs.Read(bArr, 0, bArr.Length);
-					fs.Close();
 
 					Stream postStream = request.GetRequestStream();
 					postStream.Write(itemBoundaryBytes, 0, itemBoundaryBytes.Length);
@@ -922,7 +914,7 @@ namespace UnityProgram
 
 
 
-		public class JsonInfo
+		private class JsonInfo
 		{
 			public string Id { get; set; }
 			public string Name { get; set; }

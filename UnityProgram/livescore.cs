@@ -17,15 +17,15 @@ using System.Windows.Forms;
 
 namespace UnityProgram
 {
-    public partial class livecore : UIPage
+    public partial class livescore : UIPage
     {
         
 		string postbbsapi, postimgapi, bbsisexistapi;
-		List<JsonInfo> listjson = new List<JsonInfo>();
+        private List<JsonInfo> listjson_livescore = new List<JsonInfo>();
         public bool isStop = false;
         public delegate void MyInvoke(string txt, bool is_update);
 
-        public livecore()
+        public livescore()
         {
             InitializeComponent();
 
@@ -55,15 +55,15 @@ namespace UnityProgram
             var json = File.ReadAllText(jsonpath);
             try
             {
-                listjson = JsonConvert.DeserializeObject<List<JsonInfo>>(json);
-                listjson.RemoveAll(t => t.Site != "livecore"); //移除非此爬虫网站的json
+                listjson_livescore = JsonConvert.DeserializeObject<List<JsonInfo>>(json);
+                listjson_livescore.RemoveAll(t => t.Site != "livescore"); //移除非此爬虫网站的json
             }
             catch (Exception ex)
             {
                 UIMessageDialog.ShowMessageDialog("json配置：" + ex.Message, UILocalize.InfoTitle, false, UIStyle.Black);
                 return;
             }
-            if (listjson.Count <= 0)
+            if (listjson_livescore.Count <= 0)
             {
                 UIMessageDialog.ShowMessageDialog("json没有数据", UILocalize.InfoTitle, false, UIStyle.Black);
                 return;
@@ -84,11 +84,10 @@ namespace UnityProgram
             {
                 while (!isStop)
                 {
-                    WriteLog("暂停1h", false);
-                    Thread.Sleep(3600000);
+                    WriteLog("暂停30min", false);
+                    Thread.Sleep(1800000);
                     WriteLog("", true);
                     int page = 1;
-                    int seq = 0;
                     DateTime today = DateTime.Now;
                     while (page <= 10)
                     {
@@ -144,24 +143,20 @@ namespace UnityProgram
                         urllist = urllist.Distinct().ToList();
                         //WriteLog(string.Join("", urllist), false);
 
-                        DateTime datetimenow = DateTime.Now;
-                        if (datetimenow.Day != today.Day)
-                        {
-                            seq = 0;
-                            today = DateTime.Now;
-                        }
                         foreach (var l in urllist)
                         {
                             //重新读json，因为判重时移除了重复数据
-                            listjson = JsonConvert.DeserializeObject<List<JsonInfo>>(json);
-                            listjson.RemoveAll(t => t.Site != "livecore"); //移除非此爬虫网站的json
+                            listjson_livescore = JsonConvert.DeserializeObject<List<JsonInfo>>(json);
+                            listjson_livescore.RemoveAll(t => t.Site != "livescore"); //移除非此爬虫网站的json
 
-
-                            seq++;
                             var u = l.Replace("&amp;", "&").Replace("\"", "");
                             if (!u.Contains("page")) continue;
+                            if (!u.Contains("wr_id")) continue;
+                            int startIndex = u.IndexOf("&wr_id=") + 7;
+                            int sublength = u.IndexOf("&page=") - startIndex;
+                            string wr_id = u.Substring(startIndex, sublength);
                             if (isStop) break;
-                            HandleData(u, datetimenow.ToString("yyMMdd") + "_" + seq);
+                            HandleData(u, wr_id);
                         }
 
                         reader.Close();
@@ -200,83 +195,6 @@ namespace UnityProgram
                     return;
                 }
 
-                //string tablestr = "";
-                //string regex_html = @"<table+.*?>([\s\S]*?)</table*?>";
-                //Regex regex = new Regex(regex_html, RegexOptions.IgnoreCase);
-                //if (regex.IsMatch(htmlStr))
-                //{
-                //    MatchCollection matchCollection = regex.Matches(htmlStr);
-                //    foreach (Match match in matchCollection)
-                //    {
-                //        var valueHtml = match.Value;
-                //        tablestr += valueHtml;
-                //    }
-                //}
-                //if (tablestr == "") { WriteLog("获取不到内容数据", false); return; }
-
-
-
-                //var sqlexsist = string.Format("select count(*) from Topic where Title=N'{0}'", subjectstr);
-                //SqlCommand cmdexsist = new SqlCommand(sqlexsist, conn);
-                //var cntexsist = (int)cmdexsist.ExecuteScalar();
-
-                //if (cntexsist > 0)
-                //{
-                //    WriteLog(subjectstr + "\t已存在", false);
-                //    return;
-
-                //}
-
-
-                /* 获取时间*/
-                //string timespan = "";
-                //string regex_timetag = @"<span[\s\S]class=mw_basic_view_datetime+.*?>([\s\S]*?)</span*?>";
-                //Regex regex_time = new Regex(regex_timetag, RegexOptions.IgnoreCase);
-                //string regex_timetag1 = @"<span[\s\S]class='datetime'+.*?>([\s\S]*?)</span*?>";
-                //Regex regex_time1 = new Regex(regex_timetag1, RegexOptions.IgnoreCase);
-                //if (regex_time.IsMatch(tablestr))
-                //            {
-                //                MatchCollection matchCollection = regex_time.Matches(tablestr);
-                //                foreach (Match match in matchCollection)
-                //                {
-                //                    var valueHtml = match.Value;
-                //                    timespan += valueHtml;
-                //                }
-                //            }
-                //            else if(regex_time1.IsMatch(tablestr))
-                //{
-                //	MatchCollection matchCollection = regex_time1.Matches(tablestr);
-                //	foreach (Match match in matchCollection)
-                //	{
-                //		var valueHtml = match.Value;
-                //		timespan += valueHtml;
-                //	}
-                //}
-                //if (timespan == "") { WriteLog("获取不到时间数据", false); return; }
-                //string time = "";
-                //time = Regex.Replace(timespan, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
-                //time = Regex.Replace(time, @"\[.*?\]", "", RegexOptions.IgnoreCase);
-                ////textBox1.Text = subjectstr.Trim();
-                //time = time.Replace("&quot;", "").Replace("&nbsp;", "").Replace("&#039;", "").Replace("&#65279;", "").Replace(" ", "").Replace("'", "").Trim();
-                //time = time.Replace("\n", "").Replace("\t", "").Replace("\r", "");
-                //            time = time.Substring(0, time.IndexOf('(')) + " " + time.Substring(time.IndexOf(')') + 1);
-                //            //WriteLog(time, false);
-
-                //            if (datetimenow.AddHours(-10) > DateTime.Parse(time))
-                //            {
-                //                //isStop = true;
-                //                WriteLog("帖子发布时间超过一小时已停止", false);
-                //                //extimecnt++;
-                //                //if (extimecnt > 50)
-                //                //{
-                //                //	isStop = true;
-                //                //}
-                //                return;
-                //            }
-
-                /* 获取时间 END*/
-
-
                 string viewstr = "";
                 string regex_viewtag = @"<div[\s\S]id=""bo_v_con""+.*?>([\s\S]*?)</div>";
                 Regex regex_view = new Regex(regex_viewtag, RegexOptions.IgnoreCase);
@@ -307,9 +225,17 @@ namespace UnityProgram
                 WriteLog("正在下载资源...", false);
                 var returnimgtag = DownLoadSource(imglist, url);
                 //DownLoadSource(videolist);
-                if (returnimgtag.Count == 0)
+
+
+                var errlist = isExist(title);
+
+                foreach (var err in errlist)
                 {
-                    WriteLog("已存在", false);
+                    WriteLog(title + "\t" + err, false);
+                }
+                if (listjson_livescore.Count == 0)
+                {
+                    WriteLog(title + "\t已存在", false);
                     return;
                 }
 
@@ -318,9 +244,7 @@ namespace UnityProgram
 
                 viewstr = Regex.Replace(viewstr, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase); //去除所有标签
                 //viewstr = Regex.Replace(viewstr, @"<(?!br).*?>", "", RegexOptions.IgnoreCase);   //去除所有标签，只剩br
-                //viewstr = viewstr.Replace("이브라우저는비디오태그를지원하지않습니다.크롬을사용권장합니다.", "");//去除视频标签带的文字
                 viewstr += string.Join("", returnimgtag);
-                //viewstr += string.Join("", videolist).Replace("data-src", "src").Replace("이 브라우저는 비디오태그를 지원하지 않습니다. 크롬을 사용 권장합니다.","");//去除视频标签带的文字
                 if (viewstr == "") { WriteLog("获取不到内容数据", false); return; }
 
                 reader.Close();
@@ -332,9 +256,7 @@ namespace UnityProgram
                 //SqlCommand cmd = new SqlCommand(sql, conn);
                 //cmd.ExecuteNonQuery();
 
-                var random = new Random();
-                var r = random.Next(99999);
-                var errlist1 = PostBBS(title + r, viewstr);
+                var errlist1 = PostBBS(title, viewstr);
 
                 foreach (var err in errlist1)
                 {
@@ -489,7 +411,10 @@ namespace UnityProgram
                             //    return returntag;
                             //}
 
-
+                            if (src.Contains("https://livescore.co.kr"))
+                            {
+                                src = src.Replace("https://livescore.co.kr", "");
+                            }
                             if (!src.Contains("http"))
                             {
                                 returntag.Add("<img src=\"" + src + "\">");
@@ -602,7 +527,7 @@ namespace UnityProgram
         {
             List<string> errlist = new List<string>();
             List<JsonInfo> remove = new List<JsonInfo>();
-            foreach (var info in listjson)
+            foreach (var info in listjson_livescore)
             {
                 try
                 {
@@ -641,7 +566,7 @@ namespace UnityProgram
             }
             foreach (var r in remove)
             {
-                listjson.Remove(r);
+                listjson_livescore.Remove(r);
             }
             return errlist;
         }
@@ -650,7 +575,7 @@ namespace UnityProgram
         public List<string> PostBBS(string title, string content)
         {
             List<string> errlist = new List<string>();
-            foreach (var info in listjson)
+            foreach (var info in listjson_livescore)
             {
                 try
                 {
@@ -702,7 +627,7 @@ namespace UnityProgram
         public List<string> PostImg(string filePath)
         {
             List<string> errlist = new List<string>();
-            foreach (var info in listjson)
+            foreach (var info in listjson_livescore)
             {
                 try
                 {
@@ -775,7 +700,7 @@ namespace UnityProgram
 
 
 
-        public class JsonInfo
+        private class JsonInfo
         {
             public string Id { get; set; }
             public string Name { get; set; }

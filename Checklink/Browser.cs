@@ -96,25 +96,25 @@ namespace Checklink
 
                     #region
                     /*****************json********************/
-                    List<JsonInfo> listjson = new List<JsonInfo>();
-                    var jsonpath = Path.Combine(Application.StartupPath, "apisetting.json");
-                    if (!File.Exists(jsonpath))
-                    {
-                        WriteLog("找不到json文件");
-                        isStop = true;
-                        break;
-                    }
-                    var json = File.ReadAllText(jsonpath);
-                    listjson = JsonConvert.DeserializeObject<List<JsonInfo>>(json);
-                    if (listjson.Count <= 0)
-                    {
-                        WriteLog("json没有数据");
-                        isStop = true;
-                        break;
-                    }
-                    foreach (var j in listjson)
-                    { 
-                    }
+                    //List<JsonInfo> listjson = new List<JsonInfo>();
+                    //var jsonpath = Path.Combine(Application.StartupPath, "apisetting.json");
+                    //if (!File.Exists(jsonpath))
+                    //{
+                    //    WriteLog("找不到json文件");
+                    //    isStop = true;
+                    //    break;
+                    //}
+                    //var json = File.ReadAllText(jsonpath);
+                    //listjson = JsonConvert.DeserializeObject<List<JsonInfo>>(json);
+                    //if (listjson.Count <= 0)
+                    //{
+                    //    WriteLog("json没有数据");
+                    //    isStop = true;
+                    //    break;
+                    //}
+                    //foreach (var j in listjson)
+                    //{ 
+                    //}
 
                     //合并检查
                     //方案一：根据SiteId区分，每个链接单独检查并更新（时间长，多个站时间长）
@@ -250,7 +250,7 @@ namespace Checklink
                                 href = "";
                             }
 
-                            if (!string.IsNullOrEmpty(lasturl) && href == lasturl)
+                            if (!string.IsNullOrEmpty(lasturl) && (href.Contains(lasturl) || lasturl.Contains(href)))
                             {
                                 WriteLog("与上个url一致,退出更新");
                                 continue;
@@ -485,7 +485,7 @@ namespace Checklink
                 }
 
 
-                var frames = Browser1.GetBrowser().GetFrameNames();
+                //var frames = Browser1.GetBrowser().GetFrameNames();
                 var mainframe = Browser1.GetBrowser().MainFrame;
 
                 var frameurl = mainframe.Url;
@@ -638,7 +638,8 @@ namespace Checklink
                             if (response.Result != null)
                             {
                                 string resultStr = response.Result.ToString();
-                                if (resultStr.Length > 0)
+                                resultStr += "/";
+                                if (resultStr.Length > 0 && resultStr != "null/")
                                 {
                                     isLoad = true;
                                     WriteLog("页面源地址:" + resultStr);
@@ -668,11 +669,11 @@ namespace Checklink
                                             {
                                                 if (unicodeurl.Contains(href) || href.Contains(unicodeurl))
                                                 {
-                                                    WriteLog("页面地址包含");
+                                                    WriteLog("页面源地址包含");
                                                 }
                                                 else
                                                 {
-                                                    WriteLog("页面地址不同,将更新");
+                                                    WriteLog("页面源地址不同,将更新");
                                                     newurl = unicodeurl;
                                                 }
                                             }

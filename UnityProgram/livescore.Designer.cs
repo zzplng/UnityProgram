@@ -1,6 +1,6 @@
 ﻿namespace UnityProgram
 {
-    partial class livecore
+    partial class livescore
     {
         /// <summary>
         /// Required designer variable.
