@@ -291,25 +291,26 @@ namespace UnityProgram
 				//textBox1.Text = subjectstr.Trim();
 				subjectstr = subjectstr.Replace("&quot;", "").Replace("&nbsp;", "").Replace("&#039;", "").Replace("&#034;", "").Replace("&#65279;", "").Replace("&lt;", "").Replace("&gt;", "").Replace("'", "").Trim();
 				subjectstr = subjectstr.Replace("\n", "").Replace("\t", "").Replace("\r", "");
-				//Write(subjectstr.TrimStart().TrimEnd(), false);
-				/* 获取标题 END*/
+                subjectstr = subjectstr.Replace("이토", "");
+                //Write(subjectstr.TrimStart().TrimEnd(), false);
+                /* 获取标题 END*/
 
-				//var sqlexsist = string.Format("select count(*) from Topic where Title=N'{0}'", subjectstr);
-				//SqlCommand cmdexsist = new SqlCommand(sqlexsist, conn);
-				//var cntexsist = (int)cmdexsist.ExecuteScalar();
+                //var sqlexsist = string.Format("select count(*) from Topic where Title=N'{0}'", subjectstr);
+                //SqlCommand cmdexsist = new SqlCommand(sqlexsist, conn);
+                //var cntexsist = (int)cmdexsist.ExecuteScalar();
 
-				//if (cntexsist > 0)
-				//{
-				//    WriteLog(subjectstr + "\t已存在", false);
-				//    return;
-				//}
+                //if (cntexsist > 0)
+                //{
+                //    WriteLog(subjectstr + "\t已存在", false);
+                //    return;
+                //}
 
-				//if (!isExist(subjectstr))
-				//{
-				//	WriteLog(subjectstr + "\t已存在", false);
-				//	return;
-				//}
-				var errlist = isExist(subjectstr);
+                //if (!isExist(subjectstr))
+                //{
+                //	WriteLog(subjectstr + "\t已存在", false);
+                //	return;
+                //}
+                var errlist = isExist(subjectstr);
 
 				foreach (var err in errlist)
 				{
@@ -429,7 +430,8 @@ namespace UnityProgram
 				//viewstr = Regex.Replace(viewstr, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase); //去除所有标签
 				viewstr = Regex.Replace(viewstr, @"<(?!br).*?>", "", RegexOptions.IgnoreCase);   //去除所有标签，只剩br
 				viewstr = viewstr.Replace("이브라우저는비디오태그를지원하지않습니다.크롬을사용권장합니다.", "");//去除视频标签带的文字
-				viewstr += string.Join("", returnimgtag);
+                viewstr = viewstr.Replace("이토", "");
+                viewstr += string.Join("", returnimgtag);
 				viewstr += string.Join("", videolist).Replace("data-src", "src").Replace("이 브라우저는 비디오태그를 지원하지 않습니다. 크롬을 사용 권장합니다.", "");//去除视频标签带的文字
 				if (viewstr == "") { WriteLog("获取不到内容数据", false); return; }
 

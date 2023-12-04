@@ -207,7 +207,7 @@ namespace Checklink
 
                                 redirect(name, href);
 
-                                Thread.Sleep(200000); //有超长加载时间的，延长
+                                Thread.Sleep(100000); //有超长加载时间的，延长
 
                                 CheckHtml(href);
                             }
@@ -250,7 +250,22 @@ namespace Checklink
                                 href = "";
                             }
 
-                            if (!string.IsNullOrEmpty(lasturl) && (href.Contains(lasturl) || lasturl.Contains(href)))
+							WriteLog("最终结果Href:" + href);
+
+                            if (!string.IsNullOrEmpty(href) && href.Contains("www.warning.or.kr"))
+							{
+								if (ChecklinkAPI(int.Parse(id), false, href))
+								{
+									WriteLog(name + "\t" + href + "\t失效,更新成功", false);
+								}
+								else
+								{
+									WriteLog(name + "\t" + href + "\t失效,更新失败", false);
+								}
+                                continue;
+							}
+
+							if (!string.IsNullOrEmpty(lasturl) && !string.IsNullOrEmpty(href) && (href.Contains(lasturl) || lasturl.Contains(href)))
                             {
                                 WriteLog("与上个url一致,退出更新");
                                 continue;
@@ -318,7 +333,12 @@ namespace Checklink
             //写入txt
             try
             {
-                var filepath = Application.StartupPath + "\\" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt";
+                var direc = Application.StartupPath + "\\" + "log";
+                if (!Directory.Exists(direc))
+                {
+                    Directory.CreateDirectory(direc);
+                }
+                var filepath = direc + "\\" + DateTime.Now.ToString("yyyyMMddhhmmss") + ".txt";
                 var note = richTextBox1.Text;
                 FileStream fs = new FileStream(filepath, FileMode.CreateNew, FileAccess.ReadWrite);
                 var nodebytes = Encoding.UTF8.GetBytes(note);
@@ -473,8 +493,8 @@ namespace Checklink
                 var body = Browser1.EvaluateScriptAsync("document.getElementsByTagName('body')[0].innerHTML;").Result;
                 if (body != null && body.Success)
                 {
-                    var resultStr = body.ToString();
-                    if (resultStr.Length > 1000)
+                    var resultStrbody = body.ToString();
+                    if (resultStrbody.Length > 1000)
                     {
                         WriteLog("body有内容");
                     }
@@ -530,70 +550,39 @@ namespace Checklink
                 }
 
 
-                var task = mainframe.GetSourceAsync();
-
-
-                task.ContinueWith(t =>
+                var resultStr = mainframe.GetSourceAsync().Result;
+                if (resultStr.Length > 1000)
                 {
-                    if (!t.IsFaulted)
-                    {
-                        string resultStr = t.Result;
-                        if (resultStr.Length > 1000)
-                        {
-                            //var verifystr = resultStr.Substring(0, 1000);
-                            //if (verifystr.Contains("400") || verifystr.Contains("403") || verifystr.Contains("501") || verifystr.Contains("502") || verifystr.Contains("503") || verifystr.Contains("504"))
-                            //{
-                            //    isLoad = false;
-                            //    isError = true;
-                            //    WriteLog("错误页面", false);
-                            //}
-                            //else
-                            //{
-                            //    isLoad = true;
-                            //    WriteLog("页面有内容", false);
-                            //}
+                    isLoad = true;
+                    WriteLog("页面有内容");
+                }
 
-                            isLoad = true;
-                            WriteLog("页面有内容");
-                        }
-                    }
-                });
-
-
-                //Browser1.ExecuteScriptAsync("alert('123')");
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("function tempFunction() {");
                 sb.AppendLine(" return document.getElementsByTagName('title')[0].innerHTML; ");
                 sb.AppendLine("}");
                 sb.AppendLine("tempFunction();");
-                var task01 = mainframe.EvaluateScriptAsync(sb.ToString());
-                task01.ContinueWith(t =>
+                var task01 = mainframe.EvaluateScriptAsync(sb.ToString()).Result;
+                if (task01.Success == true)
                 {
-                    if (!t.IsFaulted)
+                    if (task01.Result != null)
                     {
-                        var response = t.Result;
-                        if (response.Success == true)
+                        string resultStr01 = task01.Result.ToString();
+                        if (resultStr01.Contains("请稍后") || resultStr01.Contains("Just a moment"))
                         {
-                            if (response.Result != null)
-                            {
-                                string resultStr = response.Result.ToString();
-                                if (resultStr.Contains("请稍后") || resultStr.Contains("Just a moment"))
-                                {
-                                    isLoad = true;
-                                    WriteLog("防火墙页面");
-                                }
-                                if ((resultStr.Contains("400") || resultStr.Contains("403") || resultStr.Contains("501") || resultStr.Contains("502") || resultStr.Contains("503") 
-                                || resultStr.Contains("504")) && resultStr.Length < 1000)
-                                {
-                                    isLoad = false;
-                                    isError = true;
-                                    WriteLog("错误页面");
-                                }
-                                WriteLog("页面含标题" + resultStr);
-                            }
+                            isLoad = true;
+                            WriteLog("防火墙页面");
                         }
+                        if ((resultStr01.Contains("400") || resultStr01.Contains("403") || resultStr01.Contains("501") || resultStr01.Contains("502") || resultStr01.Contains("503")
+                        || resultStr01.Contains("504")) && resultStr01.Length < 1000)
+                        {
+                            isLoad = false;
+                            isError = true;
+                            WriteLog("错误页面");
+                        }
+                        WriteLog("页面含标题" + resultStr01);
                     }
-                });
+                }
 
 
                 sb = new StringBuilder();
@@ -601,91 +590,78 @@ namespace Checklink
                 sb.AppendLine(" return document.getElementsByName('title')[0].content; ");
                 sb.AppendLine("}");
                 sb.AppendLine("tempFunction2();");
-                var task02 = mainframe.EvaluateScriptAsync(sb.ToString());
-                task02.ContinueWith(t =>
+                var task02 = mainframe.EvaluateScriptAsync(sb.ToString()).Result;
+                if (task02.Success == true)
                 {
-                    if (!t.IsFaulted)
+                    if (task02.Result != null)
                     {
-                        var response = t.Result;
-                        if (response.Success == true)
+                        string resultStr02 = task02.Result.ToString();
+                        if (resultStr02.Length > 0)
                         {
-                            if (response.Result != null)
-                            {
-                                string resultStr = response.Result.ToString();
-                                if (resultStr.Length > 0)
-                                {
-                                    isLoad = true;
-                                    WriteLog("页面含标题" + resultStr);
-                                }
-                            }
+                            isLoad = true;
+                            WriteLog("页面含标题" + resultStr02);
                         }
                     }
-                });
+                }
 
                 sb = new StringBuilder();
                 sb.AppendLine("function tempFunction3() {");
                 sb.AppendLine(" return location.origin; ");
                 sb.AppendLine("}");
                 sb.AppendLine("tempFunction3();");
-                var task03 = mainframe.EvaluateScriptAsync(sb.ToString());
-                task03.ContinueWith(t =>
+                var task03 = mainframe.EvaluateScriptAsync(sb.ToString()).Result;
+                if (task03.Success == true)
                 {
-                    if (!t.IsFaulted)
+                    if (task03.Result != null)
                     {
-                        var response = t.Result;
-                        if (response.Success == true)
+                        string resultStr03 = task03.Result.ToString();
+                        resultStr03 += "/";
+                        if (resultStr03.Length > 0 && resultStr03 != "null/")
                         {
-                            if (response.Result != null)
+                            isLoad = true;
+                            WriteLog("页面源地址:" + resultStr03);
+                            if (!resultStr03.Contains("xn--"))
                             {
-                                string resultStr = response.Result.ToString();
-                                resultStr += "/";
-                                if (resultStr.Length > 0 && resultStr != "null/")
+                                if (resultStr03 != href && resultStr03 != "null")
                                 {
-                                    isLoad = true;
-                                    WriteLog("页面源地址:" + resultStr);
-                                    if (!resultStr.Contains("xn--"))
+                                    if (href.Contains(resultStr03) || resultStr03.Contains(href))
                                     {
-                                        if (resultStr != href && resultStr != "null")
-                                        {
-                                            if (href.Contains(resultStr) || resultStr.Contains(href))
-                                            {
-                                                WriteLog("页面源地址包含");
-                                            }
-                                            else
-                                            {
-                                                WriteLog("页面源地址不同,将更新");
-                                                newurl = resultStr;
-                                            }
-                                        }
+                                        WriteLog("页面源地址包含");
                                     }
                                     else
                                     {
-                                        //punycode
-                                        try
-                                        {
-                                            var unicodeurl = Unicode(resultStr);
-
-                                            if (unicodeurl != href)
-                                            {
-                                                if (unicodeurl.Contains(href) || href.Contains(unicodeurl))
-                                                {
-                                                    WriteLog("页面源地址包含");
-                                                }
-                                                else
-                                                {
-                                                    WriteLog("页面源地址不同,将更新");
-                                                    newurl = unicodeurl;
-                                                }
-                                            }
-                                        }
-                                        catch
-                                        { }
+                                        WriteLog("页面源地址不同,将更新");
+                                        newurl = resultStr03;
                                     }
                                 }
                             }
+                            else
+                            {
+                                //punycode
+                                try
+                                {
+                                    var unicodeurl = Unicode(resultStr03);
+
+                                    if (unicodeurl != href)
+                                    {
+                                        if (unicodeurl.Contains(href) || href.Contains(unicodeurl))
+                                        {
+                                            WriteLog("页面源地址包含");
+                                        }
+                                        else
+                                        {
+                                            WriteLog("页面源地址不同,将更新");
+                                            newurl = unicodeurl;
+                                        }
+                                    }
+                                }
+                                catch
+                                { }
+                            }
                         }
                     }
-                });
+                }
+
             }
             catch (Exception ex) 
             {
