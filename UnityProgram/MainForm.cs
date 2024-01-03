@@ -30,8 +30,9 @@ namespace UnityProgram
 			InitializeComponent();
 
 			AddPage(new livescore(), 1002);
+            AddPage(new nntv(), 1003);
 
-		}
+        }
 
 		private void btnStart_Click(object sender, EventArgs e)
 		{
@@ -70,19 +71,12 @@ namespace UnityProgram
 			}
 
 
-			//var url = "https://etoland.co.kr/link.php?n=7614386";
+			//var uurl = "https://etoland.co.kr/link.php?n=7941039";
 			////url = "https://etoland.co.kr/link.php?n=7628328";
 			////url = "https://etoland.co.kr/link.php?n=7628318";
 			////url = "https://etoland.co.kr/link.php?n=7628283";
 			//url = "https://www.etoland.co.kr/bbs/board.php?bo_table=star_asia&wr_id=12605&is_hit=yes&page=1";
-			//HandleData(url, DateTime.Now);
-
-			//for (int n = 7628328; n > 6000000; n--)
-			//{
-			//    if (isStop) break;
-			//    string url = "https://etoland.co.kr/link.php?n=" + n.ToString();
-			//    HandleData(url);
-			//}
+			//HandleData(uurl, DateTime.Now);
 
 			try
 			{
@@ -430,6 +424,7 @@ namespace UnityProgram
 				//viewstr = Regex.Replace(viewstr, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase); //去除所有标签
 				viewstr = Regex.Replace(viewstr, @"<(?!br).*?>", "", RegexOptions.IgnoreCase);   //去除所有标签，只剩br
 				viewstr = viewstr.Replace("이브라우저는비디오태그를지원하지않습니다.크롬을사용권장합니다.", "");//去除视频标签带的文字
+                viewstr = viewstr.Replace("이 브라우저는 비디오태그를 지원하지 않습니다. 크롬을 사용 권장합니다.", "");//去除视频标签带的文字
                 viewstr = viewstr.Replace("이토", "");
                 viewstr += string.Join("", returnimgtag);
 				viewstr += string.Join("", videolist).Replace("data-src", "src").Replace("이 브라우저는 비디오태그를 지원하지 않습니다. 크롬을 사용 권장합니다.", "");//去除视频标签带的文字

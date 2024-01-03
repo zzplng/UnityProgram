@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nntv", "nntv\nntv.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail", "Mail\Mail.csproj", "{2EC269E8-4D95-4DFA-B352-9B9B84F75FF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsBoom", "SmsBoom\SmsBoom.csproj", "{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{2EC269E8-4D95-4DFA-B352-9B9B84F75FF8}.Release|x64.Build.0 = Release|Any CPU
 		{2EC269E8-4D95-4DFA-B352-9B9B84F75FF8}.Release|x86.ActiveCfg = Release|Any CPU
 		{2EC269E8-4D95-4DFA-B352-9B9B84F75FF8}.Release|x86.Build.0 = Release|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Release|x64.Build.0 = Release|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F67B7CB-542B-4660-B0B8-5DAD79BBA020}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

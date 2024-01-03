@@ -17,14 +17,21 @@ namespace Spider
         public Form1()
         {
             InitializeComponent();
-            Run();
+            //Run();
 
             //string u = "https://livescore.co.kr/bbs/board.php?bo_table=share&wr_id=2068569&page=1";
             //int startIndex = u.IndexOf("&wr_id=") + 7;
             //int sublength = u.IndexOf("&page=") - startIndex;
             //string wr_id = u.Substring(startIndex, sublength);
             //MessageBox.Show(wr_id);
-        }
+
+
+            var x = DateTime.Now.Ticks.ToString("X");
+
+			var y = DateTime.Now.Ticks.ToString();
+
+            MessageBox.Show(x + "\n\r" + y);
+		}
 
 
         public void Run()
